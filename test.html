@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor Data</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Data Sensor Suhu, Kelembapan, pH, dan Kekeruhan</h1>
+        <div id="sensorData" class="data-container">
+            <p>Loading data...</p>
+        </div>
+    </div>
+
+    <script>
+        async function fetchSensorData() {
+            try {
+                const response = await fetch('http://localhost:8000/api/sensor-data');
+                const data = await response.json();
+                
+                let content = `<table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Suhu (°C)</th>
+                        <th>Kelembapan (%)</th>
+                        <th>pH</th>
+                        <th>Kekeruhan (NTU)</th>
+                        <th>Timestamp</th>
+                    </tr>`;
+                
+                data.forEach(item => {
+                    content += `<tr>
+                        <td>${item.id}</td>
+                        <td>${item.suhu}</td>
+                        <td>${item.kelembapan}</td>
+                        <td>${item.ph}</td>
+                        <td>${item.kekeruhan}</td>
+                        <td>${item.created_at}</td>
+                    </tr>`;
+                });
+
+                content += `</table>`;
+                document.getElementById("sensorData").innerHTML = content;
+            } catch (error) {
+                document.getElementById("sensorData").innerHTML = "<p>Error fetching data.</p>";
+            }
+        }
+
+        window.onload = fetchSensorData;
+    </script>
+</body>
+</html>

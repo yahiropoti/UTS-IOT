@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasbor IoT Hidroponik</title>
+    <link rel="stylesheet" href="frontendcss.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Dasbor IOT Hidroponik</h1>
+            <p>Memantau dan Mengontrol Sistem Hidroponik</p>
+        </header>
+
+        <section class="sensor-data">
+            <div class="sensor">
+                <h3>Suhu</h3>
+                <p id="temperature">Memuat...</p>
+            </div>
+            <div class="sensor">
+                <h3>Kelembapan</h3>
+                <p id="humidity">Memuat...</p>
+            </div>
+            <div class="sensor">
+                <h3>pH</h3>
+                <p id="ph">Memuat...</p>
+            </div>
+            <div class="sensor">
+                <h3>Kekeruhan</h3>
+                <p id="turbidity">Memuat...</p>
+            </div>
+        </section>
+
+        <section class="controls">
+            <h2>Panel Kontrol</h2>
+            <button id="pump-toggle" class="btn">Alihkan Pompa</button>
+            <button id="led-toggle" class="btn">Alihkan LED</button>
+        </section>
+    </div>
+
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script>
+        // Konfigurasi MQTT
+        const client = mqtt.connect('ws://broker_address:port'); // Ganti dengan alamat broker MQTT Anda
+
+        // Subscribe ke topik MQTT
+        client.on('connect', function () {
+            client.subscribe('hydroponics/temperature');
+            client.subscribe('hydroponics/humidity');
+            client.subscribe('hydroponics/ph');
+            client.subscribe('hydroponics/turbidity');
+        });
+
+        // Menangani pesan yang diterima
+        client.on('message', function (topic, message) {
+            if (topic === 'hydroponics/temperature') {
+                document.getElementById('temperature').innerText = message.toString() + ' °C';
+            } else if (topic === 'hydroponics/humidity') {
+                document.getElementById('humidity').innerText = message.toString() + ' %';
+            } else if (topic === 'hydroponics/ph') {
+                document.getElementById('ph').innerText = message.toString();
+            } else if (topic === 'hydroponics/turbidity') {
+                document.getElementById('turbidity').innerText = message.toString() + ' NTU';
+            }
+        });
+
+        // Kontrol Tombol
+        document.getElementById('pump-toggle').addEventListener('click', function () {
+            client.publish('hydroponics/pump', 'toggle'); // Kirim perintah untuk mengalihkan pompa
+        });
+
+        document.getElementById('led-toggle').addEventListener('click', function () {
+            client.publish('hydroponics/led', 'toggle'); // Kirim perintah untuk mengalihkan LED
+        });
+    </script>
+
+</body>
+</html>
