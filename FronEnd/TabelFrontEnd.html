@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Hydroponics Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Data Sensor</h1>
+    <div id="sensorData">
+        <p>Loading data...</p>
+    </div>
+
+    <script>
+        async function fetchSensorData() {
+            try {
+                const response = await fetch('http://localhost:8000/api/sensor-data');
+                const data = await response.json();
+
+                // Menampilkan data suhu
+                let content = `
+                    <p><strong>Suhu Maksimum:</strong> ${data.suhumax} °C</p>
+                    <p><strong>Suhu Minimum:</strong> ${data.suhumin} °C</p>
+                    <p><strong>Suhu Rata-rata:</strong> ${data.suhurata} °C</p>
+                    <h3>Nilai Suhu dan Kelembapan Maksimal:</h3>
+                    <ul>`;
+
+                // Menampilkan data suhu maksimal
+                data.nilai_suhu_max_humid_max.forEach(item => {
+                    content += `<li>ID: ${item.idx}, Suhu: ${item.suhun} °C, Kelembapan: ${item.humid} %, Kecerahan: ${item.kecerahan} lux, Timestamp: ${item.timestamp}</li>`;
+                });
+
+                content += `</ul><h3>Bulan dan Tahun Maksimal:</h3><ul>`;
+
+                // Menampilkan data bulan dan tahun maksimal
+                data.month_year_max.forEach(item => {
+                    content += `<li>${item.month_year}</li>`;
+                });
+
+                content += `</ul><h3>Semua Data Sensor:</h3><ul>`;
+
+                // Menampilkan semua data sensor
+                data.all_data.forEach(item => {
+                    content += `<li>ID: ${item.idx}, Suhu: ${item.suhun} °C, Kelembapan: ${item.humid} %, Kecerahan: ${item.kecerahan} lux, Timestamp: ${item.timestamp}</li>`;
+                });
+
+                content += `</ul>`;
+
+                // Menyisipkan konten ke dalam elemen dengan ID sensorData
+                document.getElementById("sensorData").innerHTML = content;
+            } catch (error) {
+                document.getElementById("sensorData").innerHTML = "<p>Error fetching data.</p>";
+            }
+        }
+
+        // Memanggil fungsi fetchSensorData saat halaman dimuat
+        window.onload = fetchSensorData;
+    </script>
+</body>
+</html>

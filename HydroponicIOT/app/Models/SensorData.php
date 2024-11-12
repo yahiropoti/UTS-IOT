@@ -9,11 +9,11 @@ class SensorData extends Model
 {
     use HasFactory;
 
-    // Nama tabel yang digunakan
     protected $table = 'sensor_data';
 
-    // Kolom-kolom yang bisa diisi
     protected $fillable = [
-        'suhu', 'kelembapan', 'ph', 'kekeruhan',
+        'suhu', 'kelembapan', 'kecerahan', 'timestamp', 'created_at', 'updated_at'
     ];
+
+    public $timestamps = false; // Tambahkan ini untuk mematikan timestamp otomatis
 }

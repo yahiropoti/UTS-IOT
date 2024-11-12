@@ -24,12 +24,8 @@
                 <p id="humidity">Memuat...</p>
             </div>
             <div class="sensor">
-                <h3>pH</h3>
-                <p id="ph">Memuat...</p>
-            </div>
-            <div class="sensor">
-                <h3>Kekeruhan</h3>
-                <p id="turbidity">Memuat...</p>
+                <h3>Kecerahan</h3>
+                <p id="brightness">Memuat...</p>
             </div>
         </section>
 
@@ -49,8 +45,7 @@
         client.on('connect', function () {
             client.subscribe('hydroponics/temperature');
             client.subscribe('hydroponics/humidity');
-            client.subscribe('hydroponics/ph');
-            client.subscribe('hydroponics/turbidity');
+            client.subscribe('hydroponics/brightness');
         });
 
         // Menangani pesan yang diterima
@@ -59,10 +54,8 @@
                 document.getElementById('temperature').innerText = message.toString() + ' °C';
             } else if (topic === 'hydroponics/humidity') {
                 document.getElementById('humidity').innerText = message.toString() + ' %';
-            } else if (topic === 'hydroponics/ph') {
-                document.getElementById('ph').innerText = message.toString();
-            } else if (topic === 'hydroponics/turbidity') {
-                document.getElementById('turbidity').innerText = message.toString() + ' NTU';
+            } else if (topic === 'hydroponics/brightness') {
+                document.getElementById('brightness').innerText = message.toString();
             }
         });
 

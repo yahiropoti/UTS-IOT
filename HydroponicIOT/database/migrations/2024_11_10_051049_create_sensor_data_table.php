@@ -12,9 +12,9 @@ class CreateSensorDataTable extends Migration
             $table->id();
             $table->float('suhu');
             $table->float('kelembapan');
-            $table->float('ph')->nullable(); // Menambahkan kolom pH
-            $table->float('kekeruhan')->nullable(); // Menambahkan kolom kekeruhan
-            $table->timestamps();
+            $table->float('kecerahan'); // Kolom baru untuk menyimpan nilai kecerahan
+            $table->timestamp('timestamp'); // Menyimpan waktu data diambil
+
         });
     }
 
